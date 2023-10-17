@@ -1,11 +1,12 @@
 class Request {
-  constructor(id, name, status, imageBuffer, numFaces, progress) {
+  constructor(id, name, status, imageBuffer, numFaces, progress, date) {
     this.id = id;
     this.name = name;
     this.status = status;
     this.imageBuffer = imageBuffer;
     this.numFaces = numFaces;
-    this.progress = progress
+    this.progress = progress;
+    this.date = date;
   }
 
   static create(id, name, status, imageBuffer, numFaces) {

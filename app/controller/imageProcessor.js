@@ -26,7 +26,7 @@ const createRequest = async (req, res) => {
       return res.status(400).send('Please upload an image.');
     } else {
       const uniqueId = crypto.randomBytes(16).toString('hex');
-      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, 10);
+      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, 10, new Date());
 
       requests.push(request);
 

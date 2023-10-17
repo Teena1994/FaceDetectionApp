@@ -1,51 +1,16 @@
-<!-- <template>
-  <div>
-    <h2>My Requests</h2>
-    <div v-for="request in requests" :key="request.id">
-      <RequestItem :request="request" />
-    </div>
-  </div>
-</template>
-
-<script>
-import axios from "axios";
-import RequestItem from './RequestItem.vue';
-
-export default {
-  components: {
-    RequestItem,
-  },
-  mounted() {
-    // This function will be called when the component is mounted
-    this.getAllRequests();
-  },
-  methods: {
-  async getAllRequests() {
-      try {
-        
-        const response = await axios.get('/request-list');
-        console.log(response);
-
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-};
-</script> -->
-
-
-
-
 <template>
-  <div>
+  <div style="padding-top: 3%;"></div>
+  <div class="container" >
+    <div class="table-wrapper">
       <h2>Image Upload List</h2>
+
       <table>
   
       <thead>
         <th>File Name</th>
         <th>Status</th>
         <th>No. Of Faces Detected</th>
+        <th>Upload Date</th>
       </thead>
 
       <tbody>
@@ -53,10 +18,12 @@ export default {
           <td>{{ request.name }}</td>
           <td>{{ request.status }}</td>
           <td>{{ request.numFaces }}</td>
+          <td> {{ request.date }} </td>
         </tr>
       </tbody>
 
     </table>
+    </div>
     </div>
 </template>
 
@@ -73,6 +40,11 @@ export default {
     // This function will be called when the component is mounted
     this.getAllRequests();
   },
+  computed: {
+    formattedDateTime() {
+      return this.formatDate(this.currentDate);
+    },
+  },
   methods: {
     async getAllRequests() {
       try {
@@ -88,3 +60,36 @@ export default {
 };
 </script>
 
+<style>
+.container {
+  display: flex;
+  justify-content: center; /* Horizontally center the table within the container */
+  align-items: center; /* Vertically center the table within the container */
+  height: 100vh; /* Adjust the height as needed */
+}
+
+.table-wrapper {
+  overflow: auto;
+  max-width: 100%;
+  background-color: white;
+  text-align: center;
+  padding: 2%;
+}
+
+tr {
+  border-bottom: 1px solid;
+}
+
+th {
+  background-color: #3a44dc;
+  color: #fff;
+  white-space: nowrap;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 0.5em 1em;
+}
+
+</style>
