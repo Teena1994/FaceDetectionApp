@@ -10,6 +10,9 @@ if(process.env.JWT_SECRET === undefined){
   setJwtTokenInEnv();
 } 
 
+// Enable CORS for all routes
+app.use(cors());
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 

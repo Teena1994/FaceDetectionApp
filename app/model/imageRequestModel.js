@@ -1,12 +1,11 @@
-let requests = []; // Store requests in memory
-
 class Request {
-  constructor(id, name, status, imageBuffer, numFaces) {
+  constructor(id, name, status, imageBuffer, numFaces, progress) {
     this.id = id;
     this.name = name;
     this.status = status;
     this.imageBuffer = imageBuffer;
     this.numFaces = numFaces;
+    this.progress = progress
   }
 
   static create(id, name, status, imageBuffer, numFaces) {
