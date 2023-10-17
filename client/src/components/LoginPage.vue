@@ -1,104 +1,104 @@
 <template>
-   <layout-div>
-        <div class="row justify-content-md-center mt-5">
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-4">Sign In</h5>
-                        <form>
-                            <p v-if="Object.keys(validationErrors).length != 0" class='text-center '><small class='text-danger'>Incorrect Email or Password</small></p>
-                            <div class="mb-3">
-                                <label 
-                                    htmlFor="email"
-                                    class="form-label">
-                                        Email address
-                                </label>
-                                <input 
-                                    v-model="email"
-                                    type="email"
-                                    class="form-control"
-                                    id="email"
-                                    name="email"
-                                />
-                            </div>
-                            <div class="mb-3">
-                                <label 
-                                    htmlFor="password"
-                                    class="form-label">Password
-                                </label>
-                                <input 
-                                    v-model="password"
-                                    type="password"
-                                    class="form-control"
-                                    id="password"
-                                    name="password"
-                                />
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button 
-                                    :disabled="isSubmitting"
-                                    @click="loginAction()"
-                                    type="button"
-                                    class="btn btn-primary btn-block">Login</button>
-                                <p class="text-center">Don't have account? 
-                                    <router-link to="/register">Register here </router-link>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-         
-   </layout-div>
+  <div style="padding-top:3%">
+
+    <form @submit.prevent="logInSubmit">
+      <h2 class="form-heading">Log in</h2>
+
+      <label>Email </label>
+      <input type="email" v-model="email" required>
+
+      <label>Password </label>
+      <input type="password" v-model="password" required>
+      <div v-if="passwordError" class="error">{{ passwordError }} </div>
+
+      <div class="button" style="padding-top: 5%; text-align: center;">
+        <button class="submit" type="submit">Log In</button>
+      </div>
+
+      <div style="padding: 5%;text-align: center; font-size:12px;">
+        <router-link to="/signup">Click here to Sign Up / Register</router-link>
+      </div>
+    </form>
+
+  </div>
 </template>
   
 <script>
-import axios from 'axios';
-import LayoutDiv from './LayoutDiv.vue';
-  
 export default {
-  name: 'LoginPage',
-  components: {
-    LayoutDiv,
-  },
+
   data() {
     return {
-        email:'',
-        password:'',
-        validationErrors:{},
-        isSubmitting:false,
-    };
-  },
-  created() {
-    if(localStorage.getItem('token') != "" && localStorage.getItem('token') != null){
-        this.$router.push('/dashboard')
+      email: '',
+      password: '',
+      passwordError: ''
     }
   },
   methods: {
-     loginAction(){
-        this.isSubmitting = true
-        let payload = {
-            email: this.email,
-            password: this.password,
-        }
-        axios.post('/api/login', payload)
-          .then(response => {
-            localStorage.setItem('token', response.data.token)
-            this.$router.push('/dashboard')
-            return response
-          })
-          .catch(error => {
-            this.isSubmitting = false
-           if (error.response.data.errors != undefined) {
-                this.validationErrors = error.response.data.errors
-            }
-            if (error.response.data.error != undefined) {
-                this.validationErrors = error.response.data.error
-            }
-            return error
-          });
-     }
-  },
-};
+
+    logInSubmit() {
+      //Validate password field length
+      this.passwordError = this.password.length > 6 ?
+        '' : 'Password should be more than 6 characters long!';
+
+      if (!this.passwordError) {
+        console.log(this.email);
+        console.log(this.password);
+        this.$router.push('/dashboard');
+      }
+    }
+  }
+
+}
 </script>
+<style>
+
+.form-heading {
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+}
+
+form {
+  max-width: 25%;
+  margin: 30px auto;
+  background: #fff;
+  text-align: left;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+label {
+  display: inline-block;
+  margin: 25px 0 15px;
+  text-transform: uppercase;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 6px;
+  border: 1px solid #ddd;
+}
+
+button {
+  background: #0842a0;
+  border: 0;
+  padding: 10px 20px; 
+  color: white;
+  border-radius: 5px;
+  width:100%; 
+}
+
+.submit {
+  text-align: center;
+}
+
+.error {
+  color: #ff0000;
+  margin-top: 10px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+</style>

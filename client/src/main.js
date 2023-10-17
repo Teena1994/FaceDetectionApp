@@ -1,26 +1,32 @@
 import { createApp } from 'vue';
+import axios from 'axios';
 import App from './App.vue';
-//import axios from 'axios';
-//import 'bootstrap/dist/css/bootstrap.css';
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-import DashboardPage from './components/DashboardPage';
-  
-// axios.defaults.baseURL = process.env.VUE_APP_API_URL
-// axios.interceptors.request.use(function (config) {
-//   //config.headers['X-Binarybox-Api-Key'] = process.env.VUE_APP_API_KEY;
-//   return config;
-// });
-  
-  
+import LogInPage from './components/LogInPage.vue';
+import SignInPage from './components/SignInPage.vue';
+import dashboardPage from './components/RequestForm.vue';
+import RequestList from './components/RequestList.vue'
+
+
+// Set the base URL for your API
+axios.defaults.baseURL = 'http://localhost:3000/api/face-detect';
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: LoginPage },
-    { path: '/register', component: RegisterPage },
-    { path: '/dashboard', component: DashboardPage },
-  ],
+   {
+    path: '/', component: LogInPage, props: true
+  },
+  { 
+    path: '/signup/', component: SignInPage
+  },
+  { 
+    path: '/dashboard/', component: dashboardPage
+  },
+  { 
+    path: '/request-list/', component: RequestList
+  }
+  ]
 });
   
 createApp(App).use(router).mount('#app');
