@@ -18,14 +18,18 @@ const setJwtTokenInEnv = () =>{
     // Add or update the JWT_SECRET environment variable
     envConfig.JWT_SECRET = secretKey;
 
+    // Add admin user email
+    envConfig.ADMIN_EMAIL = 'admin@gmail.com';
+
+    // Add admin user password
+    envConfig.ADMIN_PASSWORD = '12345678';
+
     // Save the secret back to the .env file
     const envContent = Object.keys(envConfig)
     .map((key) => `${key}=${envConfig[key]}`)
     .join('\n');
 
     fs.writeFileSync(envFilePath, envContent);
-
-    jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' });
 
     console.log('successfully set token!!');
 }

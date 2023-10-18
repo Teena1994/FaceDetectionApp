@@ -1,6 +1,12 @@
 const UserModel = require('./../model/userModel');
 const jwt = require('jsonwebtoken');
-const users = []; 
+require('dotenv').config({path: '../.env'});
+const users = [{
+  username: process.env.ADMIN_EMAIL, 
+  password: process.env.ADMIN_PASSWORD, 
+  firstname:'Admin', 
+  lastname: ''
+}]; 
 
 const userSignUp = async (req, res) => {
 try{
@@ -54,6 +60,7 @@ const userLogIn = async (req, res) => {
 }
 
 const signInUser = async (username, password) => {
+  console.log(users);
   const user = users.find((u) => (u.username === username && u.password === password));
   return user;
 }

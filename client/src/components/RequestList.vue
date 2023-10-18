@@ -28,6 +28,7 @@
                         <th>Status</th>
                         <th>Number of Faces Detected</th>
                         <th>Upload Date</th>
+                        <th v-if="adminUser">Uploaded User</th>
 
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     <td>{{ request.status }}</td>
                     <td>{{ request.numFaces }}</td>
                     <td> {{ request.date }} </td>
+                    <td v-if="adminUser"> {{ request.user }} </td>
                   </tr>
                 </tbody>
                 <div v-if="noData" class="noDataDisplay"> No image Uploads for processing..</div>
@@ -57,11 +59,13 @@ export default {
       jwtToken: localStorage.getItem('JWT_KEY'),
       noData: false,
       requestList: [], 
+      adminUser: false 
     };
   },
   mounted() {
     // This function will be called when the component is mounted
     this.getAllRequests();
+    this.adminUser = (this.user === 'admin@gmail.com')? true: false;
   },
   computed: {
     formattedDateTime() {

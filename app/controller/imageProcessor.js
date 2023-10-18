@@ -74,11 +74,14 @@ const createRequest = async (req, res) => {
 const listRequests = (req, res) => {
   try{
     const { email } = req.query;
-    console.log(requests);
+    if(email === process.env.ADMIN_EMAIL){
+      console.log('Admin User!');
+      res.status(200).send({'success':true, 'requestList' : requests });
+    }else{
+      const requestList = requests.filter((request) => (request.user === email));
+      res.status(200).send({'success':true, 'requestList' : requestList });
+    }
 
-    const requestList = requests.filter((request) => (request.user === email));
-
-    res.status(200).send({'success':true, 'requestList' : requestList });
   } catch (error) {
     console.error(error);
     res.status(400).send('An error occurred.');
