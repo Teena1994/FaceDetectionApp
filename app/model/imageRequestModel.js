@@ -1,5 +1,5 @@
 class Request {
-  constructor(id, name, status, imageBuffer, numFaces, progress, date) {
+  constructor(id, name, status, imageBuffer, numFaces, progress, date, user) {
     this.id = id;
     this.name = name;
     this.status = status;
@@ -7,10 +7,11 @@ class Request {
     this.numFaces = numFaces;
     this.progress = progress;
     this.date = date;
+    this.user = user
   }
 
-  static create(id, name, status, imageBuffer, numFaces) {
-    const request = new Request(id, name, status, imageBuffer, numFaces);
+  static create(id, name, status, imageBuffer, numFaces, date, user) {
+    const request = new Request(id, name, status, imageBuffer, numFaces, date, user);
     requests.push(request);
     return request;
   }

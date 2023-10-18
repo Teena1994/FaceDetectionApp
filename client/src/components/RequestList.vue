@@ -53,6 +53,7 @@ export default {
   data() {
     return {
       username: localStorage.getItem('username'),
+      user: localStorage.getItem('user'),
       jwtToken: localStorage.getItem('JWT_KEY'),
       noData: false,
       requestList: [], 
@@ -70,7 +71,7 @@ export default {
   methods: {
     async getAllRequests() {
       try { 
-        const response = await axios.get('/request-list',
+        const response = await axios.get(`/request-list?email=${this.user}`,
         { headers: { Authorization: `Bearer ${this.jwtToken}`} }
         );
         this.requestList = response.data.requestList;

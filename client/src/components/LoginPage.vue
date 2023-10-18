@@ -64,6 +64,7 @@ export default {
 
         if(response.data.success){
           localStorage.setItem('username', `${response.data.user.firstname} ${response.data.user.lastname}` );
+          localStorage.setItem('user', response.data.user.username );
           localStorage.setItem('JWT_KEY', response.data.token);
 
           this.$router.push('/request-list');

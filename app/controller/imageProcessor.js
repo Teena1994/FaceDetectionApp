@@ -20,13 +20,13 @@ const createRequest = async (req, res) => {
     // Call the loadModels function to load the models when the application starts
     await loadModels();
 
-    const { name } = req.body;
+    const { name, user } = req.body;
 
     if (!req.file) {
       return res.status(400).send('Please upload an image.');
     } else {
       const uniqueId = crypto.randomBytes(16).toString('hex');
-      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, 10, new Date());
+      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, 10, new Date(), user);
 
       requests.push(request);
 
@@ -73,8 +73,12 @@ const createRequest = async (req, res) => {
 
 const listRequests = (req, res) => {
   try{
+    const { email } = req.query;
     console.log(requests);
-    res.status(200).send({success:true, requestList : requests });
+
+    const requestList = requests.filter((request) => (request.user === email));
+
+    res.status(200).send({'success':true, 'requestList' : requestList });
   } catch (error) {
     console.error(error);
     res.status(400).send('An error occurred.');

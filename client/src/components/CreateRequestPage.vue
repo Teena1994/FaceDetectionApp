@@ -50,10 +50,10 @@ export default {
       alertMessage: '',
       alertType: 'info',
       username: localStorage.getItem('username'),
+      user: localStorage.getItem('user'),
       uploadProgress: 0,
       showProgressBar: false,
       jwtToken: localStorage.getItem('JWT_KEY')
-
     };
   },
   methods: {
@@ -65,6 +65,7 @@ export default {
         const formData = new FormData();
         formData.append('image', this.selectedFile);
         formData.append('name', this.filename);
+        formData.append('user', this.user);
         const response = await axios.post('/process-image',
           formData, { headers: {
              'Content-Type': 'multipart/form-data',
