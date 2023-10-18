@@ -18,7 +18,7 @@
       },
       redirectPage:{
         type: String,
-        default: 'home', 
+        default: 'home'
       } 
     },
     data() {
@@ -38,7 +38,11 @@
         if(this.redirectPage === 'home'){
           this.$router.push('/');
           this.$router.go(0);
-        }
+        }else if(this.redirectPage === 'login'){
+          this.$router.push('/');
+        }else if(this.redirectPage === 'signup'){
+          this.$router.push('/signup/');
+        }  
       },
     },
   };
@@ -53,22 +57,23 @@
   .alert-info {
     color: blue;
     padding: 20px;
+    text-align:center;
 
   }
   .alert-success {
     color: green;
     padding: 20px;
-
+    text-align:center;
   }
   .alert-warning {
     color: orange;
     padding: 20px;
-
+    text-align:center;
   }
   .alert-error {
     color: red;
     padding: 20px;
-
+    text-align:center;
   }
   .alert-box {
     max-width: 25%;

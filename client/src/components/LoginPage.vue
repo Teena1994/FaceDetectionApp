@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top:3%">
+  <div class="form-space">
 
     <form @submit.prevent="logInSubmit" v-if="!showAlert" >
       <h2 class="form-heading">Log in</h2>
@@ -15,12 +15,12 @@
         <button class="submit" type="submit">Log In</button>
       </div>
 
-      <div style="padding: 5%;text-align: center; font-size:12px;">
+      <div class="signinLink">
         <router-link to="/signup">Click here to Sign Up / Register</router-link>
       </div>
     </form>
 
-    <alert v-if="showAlert" :message="alertMessage" :type="alertType"></alert>
+    <alert v-if="showAlert" :message="alertMessage" :type="alertType" :redirectPage="redirectPage"></alert>
 
   </div>
 </template>
@@ -39,6 +39,7 @@ export default {
       showAlert: false,
       alertMessage: '',
       alertType: 'info',
+      redirectPage: 'home'
     }
   },
   methods: {
@@ -85,6 +86,9 @@ export default {
 }
 </script>
 <style>
+.form-space{
+  padding-top:3%;
+}
 .form-heading {
   color: #333;
   font-size: 24px;
@@ -118,7 +122,7 @@ select {
 button {
   background: #0842a0;
   border: 0;
-  padding: 10px 20px;
+  padding: 10px 20px !important;
   color: white;
   border-radius: 5px;
   width: 100%;
@@ -133,5 +137,11 @@ button {
   margin-top: 10px;
   font-size: 0.8em;
   font-weight: bold;
+}
+
+.signinLink{
+  padding: 5%;
+  text-align: center; 
+  font-size:12px;
 }
 </style>
