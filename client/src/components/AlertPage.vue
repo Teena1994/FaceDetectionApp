@@ -15,7 +15,11 @@
       type: {
         type: String,
         default: 'info', // or 'success', 'warning', 'error', etc.
-      }
+      },
+      redirectPage:{
+        type: String,
+        default: 'home', 
+      } 
     },
     data() {
       return {
@@ -30,6 +34,11 @@
     methods: {
       closeAlert() {
         this.isVisible = false;
+        console.log(this.redirectPage)
+        if(this.redirectPage === 'home'){
+          this.$router.push('/');
+          this.$router.go(0);
+        }
       },
     },
   };

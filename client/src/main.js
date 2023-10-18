@@ -8,25 +8,25 @@ import dashboardPage from './components/RequestForm.vue';
 import RequestList from './components/RequestList.vue'
 
 
-// Set the base URL for your API
+// Set the base URL for the REST API calls
 axios.defaults.baseURL = 'http://localhost:3000/api/face-detect';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-   {
-    path: '/', component: LogInPage, props: true
-  },
-  { 
-    path: '/signup/', component: SignInPage
-  },
-  { 
-    path: '/dashboard/', component: dashboardPage
-  },
-  { 
-    path: '/request-list/', component: RequestList
-  }
+    {
+      path: '/', component: LogInPage, props: true
+    },
+    {
+      path: '/signup/', component: SignInPage
+    },
+    {
+      path: '/dashboard/', component: dashboardPage
+    },
+    {
+      path: '/request-list/', component: RequestList
+    }
   ]
 });
-  
+
 createApp(App).use(router).mount('#app');

@@ -43,16 +43,16 @@ const userLogIn = async (req, res) => {
   try{
   const { username } = req.body;
   if (!username) {
-    return res.status(400).json({ message: 'Username is required' });
+    return res.status(400).json({ 'success': false ,message: 'Sign-in failed, Username is required.' });
   } else{
 
     const user = await signInUser(username);
 
     if (!user) {
-      return res.status(401).json({ message: 'Sign-in failed' });
+      return res.status(400).json({'success': false,  message: 'Sign-in failed, user email not found! please login to continue.' });
     } else{
       const token = await generateJWTToken(user);
-      res.status(200).json({ message: 'Sign-in successful','user': user, 'token': token });
+      res.status(200).json({'success': true,  message: 'Sign-in successful','user': user, 'token': token });
 
     }
   }

@@ -25,11 +25,7 @@
 
     </form>
 
-    <alert
-      v-if="showAlert"
-      :message="alertMessage"
-      :type="alertType"
-    ></alert>
+    <alert v-if="showAlert" :message="alertMessage" :type="alertType"></alert>
 
   </div>
 </template>
@@ -48,7 +44,7 @@ export default {
       firstname: '',
       lastname: '',
       passwordError: '',
-      showAlert: false, 
+      showAlert: false,
       alertMessage: '',
       alertType: 'info',
     }
@@ -56,12 +52,12 @@ export default {
   methods: {
     async signUpDetails() {
       try {
-        
+
         const response = await axios.post('/signUp', {
-              username: this.email,
-              password: this.password,
-              firstname: this.firstname,
-              lastname: this.lastname
+          username: this.email,
+          password: this.password,
+          firstname: this.firstname,
+          lastname: this.lastname
         });
         alert('Sign-in was successful!');
 
@@ -72,7 +68,7 @@ export default {
         console.error(error);
       }
     },
-    
+
     handleSubmit() {
       //Validate password field length
       this.passwordError = this.password.length > 6 ?
@@ -85,7 +81,7 @@ export default {
         console.log(this.lastname);
         this.showSuccessAlert();
 
-      } 
+      }
     },
     showSuccessAlert() {
       this.alertMessage = 'Sign-in was successful!';
@@ -101,56 +97,3 @@ export default {
 
 }
 </script>
-<style>
-.form-heading {
-  color: #333;
-  font-size: 20px;
-  text-align: center;
-}
-
-form {
-  max-width: 25%;
-  margin: 30px auto;
-  background: #fff;
-  text-align: left;
-  padding: 20px;
-  border-radius: 10px;
-  font-size: 14px;
-}
-
-label {
-  display: inline-block;
-  margin: 25px 0 15px;
-  text-transform: uppercase;
-}
-
-input,
-select {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  padding: 10px 6px;
-  border: 1px solid #ddd;
-}
-
-button {
-  background: #0842a0;
-  border: 0;
-  padding: 10px 20px;
-  color: white;
-  border-radius: 5px;
-  width:100%;
-}
-
-.submit {
-  text-align: center;
-}
-
-.error {
-  color: #ff0000;
-  margin-top: 10px;
-  font-size: 0.8em;
-  font-weight: bold;
-}
-</style>

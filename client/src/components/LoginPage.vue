@@ -1,15 +1,15 @@
 <template>
   <div style="padding-top:3%">
 
-    <form @submit.prevent="logInSubmit">
+    <form @submit.prevent="logInSubmit" v-if="!showAlert" >
       <h2 class="form-heading">Log in</h2>
 
       <label>Email </label>
-      <input type="email" v-model="email" required>
+      <input type="email" v-model="logInEmail" required>
 
       <label>Password </label>
-      <input type="password" v-model="password" required>
-      <div v-if="passwordError" class="error">{{ passwordError }} </div>
+      <input type="password" v-model="logInPassword" required>
+      <div v-if="logInPasswordError" class="error">{{ logInPasswordError }} </div>
 
       <div class="button" style="padding-top: 5%; text-align: center;">
         <button class="submit" type="submit">Log In</button>
@@ -20,38 +20,71 @@
       </div>
     </form>
 
+    <alert v-if="showAlert" :message="alertMessage" :type="alertType"></alert>
+
   </div>
 </template>
   
 <script>
+import axios from "axios";
+import Alert from './AlertPage.vue';
+
 export default {
 
   data() {
     return {
-      email: '',
-      password: '',
-      passwordError: ''
+      logInEmail: '',
+      logInPassword: '',
+      logInPasswordError: '',
+      showAlert: false,
+      alertMessage: '',
+      alertType: 'info',
     }
   },
   methods: {
 
     logInSubmit() {
       //Validate password field length
-      this.passwordError = this.password.length > 6 ?
+      this.logInPasswordError = this.logInPassword.length > 6 ?
         '' : 'Password should be more than 6 characters long!';
 
-      if (!this.passwordError) {
-        console.log(this.email);
-        console.log(this.password);
-        this.$router.push('/dashboard');
+      if (!this.logInPasswordError) {
+        //Navigate to main page
+        this.logInDetails();
       }
-    }
-  }
+    },
+    async logInDetails() {
+      try {
 
+        const response = await axios.post('/login', {
+          username: this.logInEmail
+        });
+
+        console.log(response.data);
+        if(response.data.success){
+          this.$router.push('/dashboard');
+
+        }else{
+          this.alertMessage = response.data.message;
+          this.alertType = 'error';
+          this.showAlert = true;
+        }
+
+      } catch (error) {
+        console.error(error);
+        this.alertMessage = (error.response && error.response.data && error.response.data.message) ? 
+        `${error.message}: ${error.response.data.message}`: error.message;
+        this.alertType = 'error';
+        this.showAlert = true;
+      }
+  },
+},
+  components: {
+    Alert
+  },
 }
 </script>
 <style>
-
 .form-heading {
   color: #333;
   font-size: 24px;
@@ -85,10 +118,10 @@ select {
 button {
   background: #0842a0;
   border: 0;
-  padding: 10px 20px; 
+  padding: 10px 20px;
   color: white;
   border-radius: 5px;
-  width:100%; 
+  width: 100%;
 }
 
 .submit {
