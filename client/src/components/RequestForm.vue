@@ -1,26 +1,40 @@
 <template>
-    <div style="padding-top:3%">
-  
-      <form @submit.prevent="logInSubmit">
-        <h2 class="form-heading">Create Request</h2>
-  
-        <label>Upload the file </label>
-        <input type="file" @change="handleFileUpload" />
+  <div class="navbar">
+    <ul>
+              <i class="fa fa-user"></i>
+              Welcome, {{ username }}
+            </ul>
+            <ul style="cursor: pointer;">
+                <a @click="backToList"><i  class="fas fa-home"></i> Home</a>
+                <a @click="signOut"><i  style="padding-left: 20px;" class="fa fa-sign-out"></i> SignOut</a>
+          </ul>
+  </div>
 
-        <label>Enter the file name </label>
-        <input type="text" v-model="filename" placeholder="Enter a name" />
-        
-        <div class="add-space"></div>
+  <div class="form-space">
 
-        <button @click="submitRequest">Submit</button>
+    <form v-if="!showAlert && !showProgressBar" @submit.prevent="submitUploadRequest">
+      <h2 class="form-heading">Create Request</h2>
 
-</form>
-<alert
-      v-if="showAlert"
-      :message="alertMessage"
-      :type="alertType"
-    ></alert>
-</div>
+      <label>Upload the file </label>
+      <input type="file" @change="handleFileUpload" />
+
+      <label>Enter the file name </label>
+      <input type="text" v-model="filename" placeholder="Enter a name" />
+
+      <div class="add-space"></div>
+
+      <button @click="submitRequest">Submit</button>
+
+    </form>
+
+    <div class="progress-container" v-if="showProgressBar">
+      <div class="progress-bar" :style="{ width: uploadProgress + '%' }">
+      </div>
+      <div>Uploading File..</div>
+    </div>
+
+    <alert v-if="showAlert" :message="alertMessage" :type="alertType" :redirectPage="redirectPage"></alert>
+  </div>
 </template>
 
 <script>
@@ -32,45 +46,67 @@ export default {
     return {
       filename: '',
       selectedFile: null,
-      showAlert: false, 
+      showAlert: false,
       alertMessage: '',
-      alertType: 'info'
+      alertType: 'info',
+      username: localStorage.getItem('username'),
+      uploadProgress: 0,
+      showProgressBar: false
+
     };
   },
   methods: {
     handleFileUpload(event) {
       this.selectedFile = event.target.files[0];
-      console.log(event.target)
-      console.log(this.selectedFile)
     },
-    async submitRequest() {
-    try {
+    async submitUploadRequest() {
+      try {
         const formData = new FormData();
-        formData.append('image', this.selectedFile); 
+        formData.append('image', this.selectedFile);
         formData.append('name', this.filename);
-            const response = await axios.post('/process-image', 
-            formData,
-            {
-                headers: { 'Content-Type': 'multipart/form-data'}
-            });
-            this.$router.push('/request-list/');
-
-
-       // this.showSuccessAlert();
-
-        console.log(response.data);
+        const response = await axios.post('/process-image',
+          formData, { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        if(response.data.success){
+          this.simulateUpload();
+        }else{
+          this.alertMessage = response.data.message;
+          this.alertType = 'error';
+          this.showAlert = true;
+          this.redirectPage = 'login';
+        }
 
       } catch (error) {
         console.error(error);
+        this.alertMessage = (error.response && error.response.data && error.response.data.message) ? 
+        `${error.message}: ${error.response.data.message}`: error.message;
+        this.alertType = 'error';
+        this.showAlert = true;
       }
     },
-    showSuccessAlert() {
-      this.alertMessage = 'Sign-in was successful!';
-      this.alertType = 'success';
-      this.showAlert = true;
-      this.$router.push('/request-list/');
-    }
+    simulateUpload() {
+      this.showProgressBar = true;
+      const totalProgressSteps = 100;
+      const percentStep = 5;
+      let currentProgress = 0;
 
+      const simulateStep = () => {
+        if (currentProgress < totalProgressSteps) {
+          currentProgress += percentStep;
+          this.uploadProgress = Math.min(currentProgress, totalProgressSteps);
+          setTimeout(simulateStep, 100); 
+        } else {
+          this.$router.push('/request-list/');
+        }
+      }
+      simulateStep();
+    },
+     backToList(){
+      this.$router.push('/request-list/');
+    },
+    signOut(){
+      this.$router.push('/');
+    }
   },
   components: {
     Alert
@@ -78,7 +114,19 @@ export default {
 };
 </script>
 <style>
- .add-space {
-    padding-bottom: 20px;
+.add-space {
+  padding-bottom: 20px;
+}
+.progress-container {
+    padding:20%;
+    text-align: center;
+    color: white;
+  }
+
+  .progress-bar {
+    height: 50px;
+    background-color: #423b73;
+    width: 0;
+    transition: width 0.5s;
   }
 </style>

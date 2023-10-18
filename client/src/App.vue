@@ -14,11 +14,9 @@
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-image: url('./assets/background.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
+  background: linear-gradient(43deg, #4158D0 , #C850C0, #FFCC70);
+  background-size: 200% 100%;
+  animation: gradientAnimation 8s infinite;
 }
 
 body {

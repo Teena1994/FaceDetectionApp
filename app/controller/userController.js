@@ -41,28 +41,24 @@ try{
 
 const userLogIn = async (req, res) => {
   try{
-  const { username } = req.body;
-  if (!username) {
-    return res.status(400).json({ 'success': false ,message: 'Sign-in failed, Username is required.' });
-  } else{
+   const { username, password } = req.body;
 
-    const user = await signInUser(username);
+    const user = await signInUser(username, password);
 
     if (!user) {
-      return res.status(400).json({'success': false,  message: 'Sign-in failed, user email not found! please login to continue.' });
+      return res.status(400).json({'success': false,  message: 'Sign-in failed, user email or password not found! please login to continue.' });
     } else{
       const token = await generateJWTToken(user);
       res.status(200).json({'success': true,  message: 'Sign-in successful','user': user, 'token': token });
 
     }
-  }
   }catch(e){
       res.status(400).json({ error: e.message });
   }
 }
 
-const signInUser = async (username) => {
-  const user = users.find((u) => u.username === username);
+const signInUser = async (username, password) => {
+  const user = users.find((u) => (u.username === username && u.password === password));
   return user;
 }
 

@@ -1,31 +1,50 @@
 <template>
-  <div style="padding-top: 3%;"></div>
-  <div class="container" >
-    <div class="table-wrapper">
-      <h2>Image Upload List</h2>
+<div id="app">
+        <div class="navbar">
+            <ul>
+              <i class="fa fa-user"></i>
+              Welcome, {{ username }}
+            </ul>
+            <ul style="cursor: pointer;">
+              <a @click="backToList"><i  class="fas fa-home"></i> Home</a>
+              <a @click="signOut"><i  style="padding-left: 20px;" class="fa fa-sign-out"></i> SignOut</a>
+          </ul>
+        </div>
+        <div class="dashboard">
 
-      <table>
-  
-      <thead>
-        <th>File Name</th>
-        <th>Status</th>
-        <th>No. Of Faces Detected</th>
-        <th>Upload Date</th>
-      </thead>
+        <div style="display:flex;">
+          <button class="button-style" @click="backToUpload">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+            <div style="padding-left: 20px;">Create an upload request</div>
+          </button>
+          <h2 class="table-heading">Image Upload Status</h2>
+        </div>
+        <div style="padding:20px;"></div>
 
-      <tbody>
-        <tr v-for="(request, index) in requests" :key="index">
-          <td>{{ request.name }}</td>
-          <td>{{ request.status }}</td>
-          <td>{{ request.numFaces }}</td>
-          <td> {{ request.date }} </td>
-        </tr>
-      </tbody>
+            <table class="image-table">
+                <thead>
+                    <tr>
+                        <th>Image Name</th>
+                        <th>Status</th>
+                        <th>Number of Faces Detected</th>
+                        <th>Upload Date</th>
 
-    </table>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(request, index) in requestList" :key="index">
+                    <td>{{ request.name }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>{{ request.numFaces }}</td>
+                    <td> {{ request.date }} </td>
+                  </tr>
+                </tbody>
+                <div v-if="noData" class="noDataDisplay"> No image Uploads for processing..</div>
+
+            </table>
+        </div>
     </div>
-    </div>
-</template>
+  </template>
 
 <script>
 import axios from "axios";
@@ -33,7 +52,9 @@ import axios from "axios";
 export default {
   data() {
     return {
-      requests: [], 
+      username: localStorage.getItem('username'),
+      noData: false,
+      requestList: [], 
     };
   },
   mounted() {
@@ -47,49 +68,81 @@ export default {
   },
   methods: {
     async getAllRequests() {
-      try {
-        
+      try { 
         const response = await axios.get('/request-list');
-         this.requests = response.data.requestList;
-        console.log(this.requests);
+        this.requestList = response.data.requestList;
+        if((this.requestList).length == 0){
+          this.noData = true;
+        }
       } catch (error) {
         console.error(error);
       }
+    },
+    backToList(){
+      this.$router.push('/request-list/');
+    },
+    signOut(){
+      this.$router.push('/');
+    },
+    backToUpload(){
+      this.$router.push('/dashboard');
     }
   }
 };
 </script>
-
 <style>
-.container {
-  display: flex;
-  justify-content: center; /* Horizontally center the table within the container */
-  align-items: center; /* Vertically center the table within the container */
-  height: 100vh; /* Adjust the height as needed */
-}
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .table-heading {
+      color: white;
+      text-align: center;
+      padding-left: 10%;
+    }
+    .navbar {
+        background-color: #423b73;
+        color: #fff;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        pointer:
+    }
 
-.table-wrapper {
-  overflow: auto;
-  max-width: 100%;
-  background-color: white;
-  text-align: center;
-  padding: 2%;
-}
+    .dashboard {
+        margin: 20px;
+    }
 
-tr {
-  border-bottom: 1px solid;
-}
+    .image-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+    }
 
-th {
-  background-color: #3a44dc;
-  color: #fff;
-  white-space: nowrap;
-}
+    .image-table th, .image-table td {
+        border: 1px solid white;
+        padding: 8px;
+        text-align: center;
+    }
 
-th,
-td {
-  text-align: center;
-  padding: 0.5em 1em;
-}
+    .image-table th {
+        background-color: #423b73;
+        color: white;
+    }
 
+    .image-table tbody tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    .image-table tbody tr:hover {
+        background-color: #e0e0e0;
+    }
+    .button-style{
+    background: #423b73 !important;
+    width: 28% !important;
+    cursor: pointer;
+    }
+    .noDataDisplay{
+      padding: 20px !important;
+      text-align: center !important;
+    }
 </style>

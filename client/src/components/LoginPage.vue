@@ -58,12 +58,15 @@ export default {
       try {
 
         const response = await axios.post('/login', {
-          username: this.logInEmail
+          username: this.logInEmail,
+          password: this.logInPassword
         });
 
         console.log(response.data);
         if(response.data.success){
-          this.$router.push('/dashboard');
+          localStorage.setItem('username', `${response.data.user.firstname} ${response.data.user.lastname}` );
+
+          this.$router.push('/request-list');
 
         }else{
           this.alertMessage = response.data.message;
@@ -98,7 +101,7 @@ export default {
 form {
   max-width: 25%;
   margin: 30px auto;
-  background: #fff;
+  background: #e1dcdc;
   text-align: left;
   padding: 20px;
   border-radius: 10px;
@@ -120,12 +123,12 @@ select {
 }
 
 button {
-  background: #0842a0;
+  background: linear-gradient(43deg, #4158D0 , #C850C0, #FFCC70) !important;
   border: 0;
   padding: 10px 20px !important;
   color: white;
   border-radius: 5px;
-  width: 100%;
+  width: 100% !important;
 }
 
 .submit {
