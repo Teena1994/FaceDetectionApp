@@ -62,9 +62,9 @@ export default {
           password: this.logInPassword
         });
 
-        console.log(response.data);
         if(response.data.success){
           localStorage.setItem('username', `${response.data.user.firstname} ${response.data.user.lastname}` );
+          localStorage.setItem('JWT_KEY', response.data.token);
 
           this.$router.push('/request-list');
 

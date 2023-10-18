@@ -51,7 +51,8 @@ export default {
       alertType: 'info',
       username: localStorage.getItem('username'),
       uploadProgress: 0,
-      showProgressBar: false
+      showProgressBar: false,
+      jwtToken: localStorage.getItem('JWT_KEY')
 
     };
   },
@@ -65,7 +66,10 @@ export default {
         formData.append('image', this.selectedFile);
         formData.append('name', this.filename);
         const response = await axios.post('/process-image',
-          formData, { headers: { 'Content-Type': 'multipart/form-data' } }
+          formData, { headers: {
+             'Content-Type': 'multipart/form-data',
+             'Authorization': `Bearer ${this.jwtToken}` 
+            } }
           );
         if(response.data.success){
           this.simulateUpload();

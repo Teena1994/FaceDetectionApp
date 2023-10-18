@@ -10,11 +10,7 @@ try{
     const newUser = await createUser(username, password, firstname, lastname);
   
     if (newUser) {
-
-      // User was created successfully
-      const token = await generateJWTToken(newUser);
-
-      res.status(200).json({ 'success': true, message: 'New user created successfully', token });
+      res.status(200).json({ 'success': true, message: 'New user created successfully' });
     } else {
       // Duplicate username
       res.status(400).json({ 'success': false, message: 'Username already exists. please Log in to proceed!' });

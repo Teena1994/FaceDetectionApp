@@ -4,7 +4,7 @@ import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import LogInPage from './components/LogInPage.vue';
 import SignInPage from './components/SignInPage.vue';
-import dashboardPage from './components/RequestForm.vue';
+import CreateRequestPage from './components/CreateRequestPage.vue';
 import RequestList from './components/RequestList.vue'
 
 
@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/signup/', component: SignInPage
     },
     {
-      path: '/dashboard/', component: dashboardPage
+      path: '/create-request/', component: CreateRequestPage
     },
     {
       path: '/request-list/', component: RequestList

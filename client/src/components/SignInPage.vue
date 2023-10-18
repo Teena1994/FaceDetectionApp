@@ -57,9 +57,7 @@ export default {
           firstname: this.firstname,
           lastname: this.lastname
         });
-        console.log(response.data);
         if(response.data.success){
-          console.log(response.data)
           this.alertMessage = 'Sign-in was successful!';
           this.alertType = 'success';
           this.redirectPage = 'login';

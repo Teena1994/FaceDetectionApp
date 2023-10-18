@@ -53,6 +53,7 @@ export default {
   data() {
     return {
       username: localStorage.getItem('username'),
+      jwtToken: localStorage.getItem('JWT_KEY'),
       noData: false,
       requestList: [], 
     };
@@ -69,7 +70,9 @@ export default {
   methods: {
     async getAllRequests() {
       try { 
-        const response = await axios.get('/request-list');
+        const response = await axios.get('/request-list',
+        { headers: { Authorization: `Bearer ${this.jwtToken}`} }
+        );
         this.requestList = response.data.requestList;
         if((this.requestList).length == 0){
           this.noData = true;
@@ -85,7 +88,7 @@ export default {
       this.$router.push('/');
     },
     backToUpload(){
-      this.$router.push('/dashboard');
+      this.$router.push('/create-request');
     }
   }
 };

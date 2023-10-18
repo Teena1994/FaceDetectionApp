@@ -10,7 +10,7 @@ function validateToken(req, res, next) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // Token is valid, and 'decoded' contains the payload
       console.log('Token verified successfully', decoded);
-      //next();
+      next();
     }
   } catch (err) {
     if (err instanceof jwt.JsonWebTokenError) {
