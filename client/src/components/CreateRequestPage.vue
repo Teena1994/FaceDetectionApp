@@ -16,10 +16,10 @@
       <h2 class="form-heading">Create Request</h2>
 
       <label>Upload the file </label>
-      <input type="file" @change="handleFileUpload" />
+      <input type="file" @change="handleFileUpload" required />
 
       <label>Enter the file name </label>
-      <input type="text" v-model="filename" placeholder="Enter a name" />
+      <input type="text" v-model="filename" placeholder="Enter a name" required/>
 
       <div class="add-space"></div>
 
