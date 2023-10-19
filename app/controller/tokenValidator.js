@@ -6,9 +6,7 @@ function validateToken(req, res, next) {
     if (!token) {
       res.status(401).json({ error: 'Unauthorized Access. Please provide valid token to proceed!' });
     } else {
-      console.log(token, process.env.JWT_SECRET)
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Token is valid, and 'decoded' contains the payload
       console.log('Token verified successfully', decoded);
       next();
     }

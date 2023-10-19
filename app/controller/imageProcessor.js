@@ -5,7 +5,7 @@ const canvas = require('canvas');
 const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
-var requests = []; // Store requests in memory
+var requests = []; // Store image upload requests in memory
 
 
 async function loadModels() {
@@ -13,7 +13,6 @@ async function loadModels() {
   await faceapi.nets.faceLandmark68Net.loadFromDisk('model/face-detection-models');
   await faceapi.nets.faceRecognitionNet.loadFromDisk('model/face-detection-models');
 }
-
 
 const createRequest = async (req, res) => {
   try {
@@ -25,32 +24,26 @@ const createRequest = async (req, res) => {
     if (!req.file) {
       return res.status(400).send('Please upload an image.');
     } else {
+
+      //Image id to store in memory
       const uniqueId = crypto.randomBytes(16).toString('hex');
-      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, 10, new Date(), user);
+
+      //Create a new image upload request 
+      const request = new Request(uniqueId, name, 'enqueued', req.file.buffer, 0, new Date(), user);
 
       requests.push(request);
 
-      res.status(200).send({success:true, requests: requests });
+      res.status(200).send({ success: true, requests: requests });
 
 
       const input = await canvas.loadImage(req.file.buffer);
 
-      setInterval(() => {
-        if (request.status === 'progress') {
-          if (request.progress < 70) {
-            request.progress += 10;
-          }else{
-            clearInterval();
-          }
-        }
-      }, 1000);
-
+      //Call api to count the number of faces
       const detections = await faceapi.detectAllFaces(input).withFaceLandmarks().withFaceDescriptors();
-      const numFaces = detections.length;
+      const numOfFaces = detections.length;
 
       request.status = 'ready';
-      request.numFaces = numFaces;
-      request.progress = 100;
+      request.numFaces = numOfFaces;
 
       const requestToUpdate = requests.find((u) => u.id === uniqueId);
 
@@ -59,7 +52,7 @@ const createRequest = async (req, res) => {
         requests = requests.map(request =>
           request.id === requestToUpdate ? { ...request, ...requests } : request
         );
-        console.log(requests);
+
       } else {
         console.log('User not found');
       }
@@ -72,14 +65,14 @@ const createRequest = async (req, res) => {
 };
 
 const listRequests = (req, res) => {
-  try{
+  try {
     const { email } = req.query;
-    if(email === process.env.ADMIN_EMAIL){
+    if (email === process.env.ADMIN_EMAIL) {
       console.log('Admin User!');
-      res.status(200).send({'success':true, 'requestList' : requests });
-    }else{
+      res.status(200).send({ 'success': true, 'requestList': requests });
+    } else {
       const requestList = requests.filter((request) => (request.user === email));
-      res.status(200).send({'success':true, 'requestList' : requestList });
+      res.status(200).send({ 'success': true, 'requestList': requestList });
     }
 
   } catch (error) {
