@@ -19,7 +19,7 @@
       <input type="file" @change="handleFileUpload" required />
 
       <label>Enter the file name </label>
-      <input type="text" v-model="filename" placeholder="Enter a name" required/>
+      <input type="text" v-model="filename" placeholder="Enter a name" required />
 
       <div class="add-space"></div>
 
@@ -27,7 +27,7 @@
 
     </form>
 
-    <div class="progress-container" v-if="showProgressBar">
+    <div class="progress-container" v-if="showProgressBar && !showAlert">
       <div class="progress-bar" :style="{ width: uploadProgress + '%' }">
       </div>
       <div>Uploading File..</div>
@@ -53,8 +53,7 @@ export default {
       user: localStorage.getItem('user'),
       uploadProgress: 0,
       showProgressBar: false,
-      jwtToken: localStorage.getItem('JWT_KEY'),
-      uploadRes: {}
+      jwtToken: localStorage.getItem('JWT_KEY')
     };
   },
   methods: {
@@ -63,22 +62,26 @@ export default {
     },
     async submitUploadRequest() {
       try {
-        this.simulateUpload();
-
         const formData = new FormData();
         formData.append('image', this.selectedFile);
         formData.append('name', this.filename);
         formData.append('user', this.user);
         const response = await axios.post('/process-image',
           formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${this.jwtToken}`
-            }
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${this.jwtToken}`
+          }
         }
         );
-        this.uploadRes = response.data;
-
+        if (response.data.success) {
+          this.simulateUpload();
+        } else {
+          this.alertMessage = response.data.message;
+          this.alertType = 'error';
+          this.showAlert = true;
+          this.redirectPage = 'login';
+        }
       } catch (error) {
         console.error(error);
         this.alertMessage = (error.response && error.response.data && error.response.data.message) ?
@@ -99,14 +102,7 @@ export default {
           this.uploadProgress = Math.min(currentProgress, totalProgressSteps);
           setTimeout(simulateStep, 100);
         } else {
-          if (this.uploadRes.success) {
-            this.$router.push('/request-list/');
-          } else {
-            this.alertMessage = this.uploadRes.message;
-            this.alertType = 'error';
-            this.showAlert = true;
-            this.redirectPage = 'login';
-          }
+          this.$router.push('/request-list/');
         }
       }
       simulateStep();
@@ -139,4 +135,5 @@ export default {
   background-color: #423b73;
   width: 0;
   transition: width 0.5s;
-}</style>
+}
+</style>
