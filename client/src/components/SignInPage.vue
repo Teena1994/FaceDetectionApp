@@ -45,7 +45,7 @@ export default {
       showAlert: false,
       alertMessage: '',
       alertType: 'info',
-      redirectPage: ''
+      redirectPage: 'home'
     }
   },
   methods: {
@@ -57,12 +57,12 @@ export default {
           firstname: this.firstname,
           lastname: this.lastname
         });
-        if(response.data.success){
+        if (response.data.success) {
           this.alertMessage = 'Sign-in was successful!';
           this.alertType = 'success';
           this.redirectPage = 'login';
           this.showAlert = true;
-        }else{
+        } else {
           this.alertMessage = response.data.message;
           this.alertType = 'error';
           this.showAlert = true;
@@ -70,8 +70,8 @@ export default {
         }
       } catch (error) {
         console.error(error);
-        this.alertMessage = (error.response && error.response.data && error.response.data.message) ? 
-        `${error.message}: ${error.response.data.message}`: error.message;
+        this.alertMessage = (error.response && error.response.data && error.response.data.message) ?
+          `${error.message}: ${error.response.data.message}` : error.message;
         this.alertType = 'error';
         this.showAlert = true;
         this.redirectPage = 'signup';
@@ -95,14 +95,14 @@ export default {
 </script>
 
 <style>
-.backButton{
+.backButton {
   padding-bottom: 2%;
   text-align: center;
-  font-size:12px;
+  font-size: 12px;
 }
 
-.siginButton{
-  padding-top: 5%; 
+.siginButton {
+  padding-top: 5%;
   text-align: center;
   font-size: 12px;
 }

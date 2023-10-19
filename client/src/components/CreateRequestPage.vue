@@ -1,13 +1,13 @@
 <template>
   <div class="navbar">
     <ul>
-              <i class="fa fa-user"></i>
-              Welcome, {{ username }}
-            </ul>
-            <ul style="cursor: pointer;">
-                <a @click="backToList"><i  class="fas fa-home"></i> Home</a>
-                <a @click="signOut"><i  style="padding-left: 20px;" class="fa fa-sign-out"></i> SignOut</a>
-          </ul>
+      <i class="fa fa-user"></i>
+      Welcome, {{ username }}
+    </ul>
+    <ul style="cursor: pointer;">
+      <a @click="backToList"><i class="fas fa-home"></i> Home</a>
+      <a @click="signOut"><i style="padding-left: 20px;" class="fa fa-sign-out"></i> SignOut</a>
+    </ul>
   </div>
 
   <div class="form-space">
@@ -53,7 +53,8 @@ export default {
       user: localStorage.getItem('user'),
       uploadProgress: 0,
       showProgressBar: false,
-      jwtToken: localStorage.getItem('JWT_KEY')
+      jwtToken: localStorage.getItem('JWT_KEY'),
+      uploadRes: {}
     };
   },
   methods: {
@@ -62,29 +63,26 @@ export default {
     },
     async submitUploadRequest() {
       try {
+        this.simulateUpload();
+
         const formData = new FormData();
         formData.append('image', this.selectedFile);
         formData.append('name', this.filename);
         formData.append('user', this.user);
         const response = await axios.post('/process-image',
-          formData, { headers: {
-             'Content-Type': 'multipart/form-data',
-             'Authorization': `Bearer ${this.jwtToken}` 
-            } }
-          );
-        if(response.data.success){
-          this.simulateUpload();
-        }else{
-          this.alertMessage = response.data.message;
-          this.alertType = 'error';
-          this.showAlert = true;
-          this.redirectPage = 'login';
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${this.jwtToken}`
+            }
         }
+        );
+        this.uploadRes = response.data;
 
       } catch (error) {
         console.error(error);
-        this.alertMessage = (error.response && error.response.data && error.response.data.message) ? 
-        `${error.message}: ${error.response.data.message}`: error.message;
+        this.alertMessage = (error.response && error.response.data && error.response.data.message) ?
+          `${error.message}: ${error.response.data.message}` : error.message;
         this.alertType = 'error';
         this.showAlert = true;
       }
@@ -99,17 +97,24 @@ export default {
         if (currentProgress < totalProgressSteps) {
           currentProgress += percentStep;
           this.uploadProgress = Math.min(currentProgress, totalProgressSteps);
-          setTimeout(simulateStep, 100); 
+          setTimeout(simulateStep, 100);
         } else {
-          this.$router.push('/request-list/');
+          if (this.uploadRes.success) {
+            this.$router.push('/request-list/');
+          } else {
+            this.alertMessage = this.uploadRes.message;
+            this.alertType = 'error';
+            this.showAlert = true;
+            this.redirectPage = 'login';
+          }
         }
       }
       simulateStep();
     },
-     backToList(){
+    backToList() {
       this.$router.push('/request-list/');
     },
-    signOut(){
+    signOut() {
       this.$router.push('/');
     }
   },
@@ -122,16 +127,16 @@ export default {
 .add-space {
   padding-bottom: 20px;
 }
-.progress-container {
-    padding:20%;
-    text-align: center;
-    color: white;
-  }
 
-  .progress-bar {
-    height: 50px;
-    background-color: #423b73;
-    width: 0;
-    transition: width 0.5s;
-  }
-</style>
+.progress-container {
+  padding: 20%;
+  text-align: center;
+  color: white;
+}
+
+.progress-bar {
+  height: 50px;
+  background-color: #423b73;
+  width: 0;
+  transition: width 0.5s;
+}</style>

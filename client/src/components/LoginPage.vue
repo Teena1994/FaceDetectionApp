@@ -1,7 +1,7 @@
 <template>
   <div class="form-space">
 
-    <form @submit.prevent="logInSubmit" v-if="!showAlert" >
+    <form @submit.prevent="logInSubmit" v-if="!showAlert">
       <h2 class="form-heading">Log in</h2>
 
       <label>Email </label>
@@ -62,14 +62,14 @@ export default {
           password: this.logInPassword
         });
 
-        if(response.data.success){
-          localStorage.setItem('username', `${response.data.user.firstname} ${response.data.user.lastname}` );
-          localStorage.setItem('user', response.data.user.username );
+        if (response.data.success) {
+          localStorage.setItem('username', `${response.data.user.firstname} ${response.data.user.lastname}`);
+          localStorage.setItem('user', response.data.user.username);
           localStorage.setItem('JWT_KEY', response.data.token);
 
           this.$router.push('/request-list');
 
-        }else{
+        } else {
           this.alertMessage = response.data.message;
           this.alertType = 'error';
           this.showAlert = true;
@@ -77,22 +77,23 @@ export default {
 
       } catch (error) {
         console.error(error);
-        this.alertMessage = (error.response && error.response.data && error.response.data.message) ? 
-        `${error.message}: ${error.response.data.message}`: error.message;
+        this.alertMessage = (error.response && error.response.data && error.response.data.message) ?
+          `${error.message}: ${error.response.data.message}` : error.message;
         this.alertType = 'error';
         this.showAlert = true;
       }
+    },
   },
-},
   components: {
     Alert
   },
 }
 </script>
 <style>
-.form-space{
-  padding-top:3%;
+.form-space {
+  padding-top: 3%;
 }
+
 .form-heading {
   color: #333;
   font-size: 24px;
@@ -124,12 +125,13 @@ select {
 }
 
 button {
-  background: linear-gradient(43deg, #4158D0 , #C850C0, #FFCC70) !important;
+  background: linear-gradient(43deg, #4158D0, #C850C0, #FFCC70) !important;
   border: 0;
   padding: 10px 20px !important;
   color: white;
   border-radius: 5px;
   width: 100% !important;
+  cursor: pointer;
 }
 
 .submit {
@@ -143,9 +145,9 @@ button {
   font-weight: bold;
 }
 
-.signinLink{
+.signinLink {
   padding: 5%;
-  text-align: center; 
-  font-size:12px;
+  text-align: center;
+  font-size: 12px;
 }
 </style>
